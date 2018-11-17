@@ -1,8 +1,8 @@
-9cc: 9cc.c
+101cc: 101cc.c
 
-test: 9cc
+test: 101cc
 	./test.sh
 
 clean:
-	rm -rf 9cc *.o *- tmp*
+	rm -rf 101cc *.o *- tmp*
 

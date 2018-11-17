@@ -51,10 +51,19 @@ void tokenize(char *p) {
       continue;
     }
 
-    if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' ||
-        *p == ')') {
+    if (*p =='(' || *p == ')') {
       tokens[i].ty = *p;
       tokens[i].input = p;
+      //fprintf(stderr, "%s\n", p);
+      i++;
+      p++;
+      continue;
+    }
+
+    if (*p == '+' || *p == '-' || *p == '*' || *p == '/') {
+      tokens[i].ty = *p;
+      tokens[i].input = p;
+      //fprintf(stderr, "%s\n", p);
       i++;
       p++;
       continue;
@@ -94,6 +103,8 @@ Node *new_node_num(int val) {
 Node *expr() {
   Node *lhs = mul();
 
+  //fprintf(stderr, "expr\n");
+
   if (tokens[pos].ty == '+') {
     pos++;
     return new_node('+', lhs, expr());
@@ -103,11 +114,14 @@ Node *expr() {
     pos++;
     return new_node('-', lhs, expr());
   }
+
   return lhs;
 }
 
 Node *mul() {
   Node *lhs = term();
+
+  //fprintf(stderr, "mul\n");
 
   if (tokens[pos].ty == '*') {
     pos++;
@@ -126,13 +140,17 @@ Node *term() {
   if (tokens[pos].ty == TK_NUM)
     return new_node_num(tokens[pos++].val);
 
+  //fprintf(stderr, "term\n");
+
   if (tokens[pos].ty == '(') {
     pos++;
     Node *node = expr();
-    if (tokens[pos].ty == ')')
+    
+    /* if (tokens[pos].ty == ')')
       error("開きカッコに対応する閉じカッコがありません： %s",
-            tokens[pos].input);
+            tokens[pos].input); */
     pos++;
+    
     return node;
   }
 
@@ -185,6 +203,7 @@ int main(int argc, char **argv) {
 
   // トークナイズする
   tokenize(argv[1]);
+
   Node *node = expr();
 
   //    アセンブリの前半部分を出力
@@ -199,6 +218,7 @@ int main(int argc, char **argv) {
   //    それをRAXにロードして関数からの返り値とする
   printf("  pop rax\n");
   printf("  ret\n");
+
   return 0;
 
 }
