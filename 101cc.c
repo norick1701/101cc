@@ -145,7 +145,7 @@ Node *term() {
   if (tokens[pos].ty == '(') {
     pos++;
     Node *node = expr();
-    
+
     /*
     if (tokens[pos].ty == ')')
       error("開きカッコに対応する閉じカッコがありません： %s",
@@ -153,7 +153,7 @@ Node *term() {
      */
 
     pos++;
-    
+
     return node;
   }
 
